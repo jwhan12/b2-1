@@ -1,19 +1,21 @@
-# B2-1 콘솔 가계부
+# 나만의 용돈 기입장 프로그램 만들기
 
 ## 실행 방법
 
-Python 3.10 이상이 필요합니다. `b2-1` 폴더로 이동한 뒤 실행하세요. 별도 라이브러리 설치는 필요하지 않습니다.
+개발 환경 : Python 3.12.13  
+제약 사항 : 표준 라이브러리만 사용, 외부 라이브러리 사용 금지
 
 ```bash
-python --version
-python -m budget_app <command> [options]
-python -m budget_app --help
-python -m budget_app add --help
+python3 --version
+python3 -m budget_app <command> [options]
+python3 -m budget_app --help
+python3 -m budget_app add --help
 ```
 
 ## 저장 파일 위치·형식
 
-기본 저장 위치는 실행 디렉터리의 `./data`입니다. 다른 위치를 사용하려면 각 명령 뒤에 `--data-dir 경로`를 지정하세요. 저장 형식은 UTF-8 JSONL이며, 한 줄마다 JSON 객체 하나를 저장합니다.
+기본 저장 위치는 실행 디렉터리의 `./data`입니다. 다른 위치를 사용하려면 각 명령 뒤에 `--data-dir 경로`를 지정합니다.   
+저장 형식은 UTF-8 JSONL이며, 한 줄마다 JSON 객체 하나를 저장합니다.
 
 | 파일 | 저장 내용 |
 |---|---|
@@ -25,30 +27,30 @@ python -m budget_app add --help
 
 ```bash
 # 거래 추가: 날짜, 타입, 카테고리, 금액, 메모, 태그를 순서대로 입력
-python -m budget_app add
+python3 -m budget_app add
 
 # 목록 및 검색
-python -m budget_app list --limit 10
-python -m budget_app search --from 2024-01-01 --to 2024-01-31 --category food --type expense --q 점심 --tag meal
+python3 -m budget_app list --limit 10
+python3 -m budget_app search --from 2024-01-01 --to 2024-01-31 --category food --type expense --q 점심 --tag meal
 
 # 거래 수정 및 삭제
-python -m budget_app update --id TX-거래ID --amount 16000 --memo 새메모 --tags meal,work
-python -m budget_app delete --id TX-거래ID
+python3 -m budget_app update --id TX-거래ID --amount 16000 --memo 새메모 --tags meal,work
+python3 -m budget_app delete --id TX-거래ID
 
 # 월별 요약 및 예산 관리
-python -m budget_app summary --month 2024-01 --top 3
-python -m budget_app budget set --month 2024-01 --amount 500000
-python -m budget_app budget show --month 2024-01
+python3 -m budget_app summary --month 2024-01 --top 3
+python3 -m budget_app budget set --month 2024-01 --amount 500000
+python3 -m budget_app budget show --month 2024-01
 
 # 카테고리 관리: add와 remove는 이름을 대화형으로 입력
-python -m budget_app category add
-python -m budget_app category list
-python -m budget_app category remove
+python3 -m budget_app category add
+python3 -m budget_app category list
+python3 -m budget_app category remove
 
 # CSV 가져오기 및 내보내기
-python -m budget_app import --from examples/sample_import.csv
-python -m budget_app export --out january.csv --month 2024-01
-python -m budget_app export --out range.csv --from 2024-01-01 --to 2024-01-31
+python3 -m budget_app import --from examples/sample_import.csv
+python3 -m budget_app export --out january.csv --month 2024-01
+python3 -m budget_app export --out range.csv --from 2024-01-01 --to 2024-01-31
 ```
 
 ## import/export CSV 스키마
