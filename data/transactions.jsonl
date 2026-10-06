@@ -1,0 +1,7 @@
+{"id":"TX-7b345dcc4ba44f7a86f205701481bb1f","type":"income","date":"2026-10-06","amount":50000,"category":"salary","memo":"부수입","tags":[]}
+{"id":"TX-d5c361328a28493c9d3cdb4dd37bdffe","type":"expense","date":"2026-10-06","amount":10000,"category":"food","memo":"떡볶이","tags":[]}
+{"id":"TX-cb3ae208ce4c4fa4b4705d4dcfae790b","type":"expense","date":"2026-10-06","amount":1500,"category":"food","memo":"커피","tags":["coffee"]}
+{"id":"TX-2fb43cb1f2f348a98e95d65916c913ad","type":"expense","date":"2024-01-15","amount":15000,"category":"food","memo":"점심","tags":["meal"]}
+{"id":"TX-e5390291d96c43c19f236d418caa2faa","type":"income","date":"2024-01-16","amount":3000000,"category":"salary","memo":"월급","tags":[]}
+{"id":"TX-e14c79a8633b4949abf9e1426db0124e","type":"expense","date":"2026-10-04","amount":3500,"category":"cafe","memo":"에이드","tags":[]}
+{"id":"TX-b977b23226a7404b8ef15c0e18aa878b","type":"income","date":"2026-10-03","amount":20000,"category":"salary","memo":"상여급","tags":[]}
