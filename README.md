@@ -26,31 +26,31 @@ python3 -m budget_app add --help
 ## 주요 명령 예시
 
 ```bash
-# 거래 추가: 날짜, 타입, 카테고리, 금액, 메모, 태그를 순서대로 입력
+# add: 거래 추가: 날짜, 타입, 카테고리, 금액, 메모, 태그를 순서대로 입력
 python3 -m budget_app add
 
-# 목록 및 검색
-python3 -m budget_app list --limit 10
-python3 -m budget_app search --from 2024-01-01 --to 2024-01-31 --category food --type expense --q 점심 --tag meal
+# list & search: 목록 및 검색
+python3 -m budget_app list --limit 3
+python3 -m budget_app search --from 2024-01-01 --to 2026-10-07 --category food --type expense --q 커피
 
-# 거래 수정 및 삭제
-python3 -m budget_app update --id TX-거래ID --amount 16000 --memo 새메모 --tags meal,work
+# update & delete: 거래 수정 및 삭제
+python3 -m budget_app update --id TX-cb3ae208ce4c4fa4b4705d4dcfae790b --amount 1500 --tags coffee
 python3 -m budget_app delete --id TX-거래ID
 
-# 월별 요약 및 예산 관리
-python3 -m budget_app summary --month 2024-01 --top 3
-python3 -m budget_app budget set --month 2024-01 --amount 500000
-python3 -m budget_app budget show --month 2024-01
+# summary: 월별 요약 및 예산 관리
+python3 -m budget_app summary --month 2026-10 --top 3
+python3 -m budget_app budget set --month 2026-10 --amount 100000
+python3 -m budget_app budget show --month 2026-10
 
-# 카테고리 관리: add와 remove는 이름을 대화형으로 입력
+# category: 카테고리 관리(add와 remove는 이름을 대화형으로 입력)
 python3 -m budget_app category add
 python3 -m budget_app category list
 python3 -m budget_app category remove
 
 # CSV 가져오기 및 내보내기
 python3 -m budget_app import --from examples/sample_import.csv
-python3 -m budget_app export --out january.csv --month 2024-01
-python3 -m budget_app export --out range.csv --from 2024-01-01 --to 2024-01-31
+python3 -m budget_app export --out examples/sample_import.csv --month 2024-01
+python3 -m budget_app export --out examples/sample_import.csv --from 2026-10-03 --to 2026-10-04
 ```
 
 ## import/export CSV 스키마
@@ -67,3 +67,20 @@ CSV는 UTF-8 인코딩과 헤더를 사용합니다. 열 순서는 `date,type,ca
 | `tags` | 아니요 | 쉼표로 구분한 태그 문자열 |
 
 메모나 다른 필드에 쉼표, 따옴표, 줄바꿈이 있으면 CSV 규칙에 맞게 필드를 큰따옴표로 감쌉니다. 따옴표 자체는 두 번 써서 표시합니다.
+
+## 확인 명령어
+```bash
+# add(거래 추가)
+python3 -m budget_app add
+
+# list(거래 목록)
+python3 -m budget_app list --limit 3
+
+# search(거래 검색)
+python3 -m budget_app search --from 2024-01-01 --to 2026-10-07 --category food --type expense --q 커피
+
+# summary(월별 요약)
+python3 -m budget_app summary --month 2026-10 --top 3
+
+#
+```
