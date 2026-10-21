@@ -107,13 +107,14 @@ class BudgetService:
         memo: str = "",
         tags: str = "",
     ) -> Transaction:
-        transaction = self._new_transaction(
+        transaction = self._new_transaction( # 사용자가 입력한 정보를 바탕으로 새로운 거래 객체 생성
             transaction_date, transaction_type, category, amount, memo, tags
         )
-        self.storage.transactions.append(transaction)
-        return transaction
+        self.storage.transactions.append(transaction) # 생성한 거래를 data/transactions.jsonl에 저장
+        return transaction # 저장한 거래 객체 반환
 
-    def list_transactions(self, limit: int = 20) -> list[Transaction]:
+    # 저장된 거래 내역 최신순 조회
+    def list_transactions(self, limit: int = 20) -> list[Transaction]: # limit 입력 없을 시 기본값 20
         if limit <= 0:
             raise AppError("목록 건수는 양수여야 합니다.", "--limit에 1 이상의 정수를 지정하세요.")
         selected = heapq.nlargest(
@@ -149,6 +150,7 @@ class BudgetService:
     def delete_transaction(self, identifier: str) -> None:
         self.storage.transactions.rewrite_one(identifier, lambda _: None)
 
+    # 제너레이터 함수
     def search_transactions(
         self,
         *,
@@ -172,6 +174,7 @@ class BudgetService:
         if tag is not None and not tag.strip():
             raise AppError("검색 태그가 비어 있습니다.", "--tag에 태그 이름을 입력하세요.")
 
+        # 거래 내역 하나가 검색 조건에 일치하는지 검사하는 함수
         def matches(transaction: Transaction) -> bool:
             return (
                 (date_from is None or transaction.date >= date_from)
