@@ -1,4 +1,4 @@
-"""가계부의 데이터 계약."""
+"""다른 파일들이 가계부의 데이터를 일관적인 구조로 주고 받을 수 있도록 데이터 구조 정의."""
 
 from dataclasses import asdict, dataclass
 from typing import Any
@@ -7,6 +7,7 @@ from .errors import AppError
 from .validators import validate_amount, validate_category_name, validate_date, validate_type
 
 
+# 가계부의 수입과 지출 내역 하나를 표현하는 데이터 구조
 @dataclass(frozen=True)
 class Transaction:
     id: str
@@ -18,7 +19,7 @@ class Transaction:
     tags: list[str]
 
     @classmethod
-    def from_record(cls, record: dict[str, Any]) -> "Transaction":
+    def from_record(cls, record: dict[str, Any]) -> "Transaction": # 데이터 검증 > Transaction 객체
         try:
             identifier = record["id"]
             transaction_type = record["type"]
@@ -45,16 +46,18 @@ class Transaction:
         except (KeyError, TypeError, ValueError, AppError) as exc:
             raise AppError("저장된 거래 형식이 올바르지 않습니다.", "transactions.jsonl의 해당 행을 확인하세요.") from exc
 
-    def to_record(self) -> dict[str, Any]:
+    def to_record(self) -> dict[str, Any]: # 딕셔너리 반환
         return asdict(self)
 
 
+# 외부 데이터를 가져왔을 때의 결과 표현
 @dataclass(frozen=True)
 class ImportResult:
     imported: int
     skipped: int
 
 
+# 한 달간의 가계부 내역 요약
 @dataclass(frozen=True)
 class MonthSummary:
     count: int
