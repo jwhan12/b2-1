@@ -67,20 +67,3 @@ CSV는 UTF-8 인코딩과 헤더를 사용합니다. 열 순서는 `date,type,ca
 | `tags` | 아니요 | 쉼표로 구분한 태그 문자열 |
 
 메모나 다른 필드에 쉼표, 따옴표, 줄바꿈이 있으면 CSV 규칙에 맞게 필드를 큰따옴표로 감쌉니다. 따옴표 자체는 두 번 써서 표시합니다.
-
-## 확인 명령어
-```bash
-# add(거래 추가)
-python3 -m budget_app add
-
-# list(거래 목록)
-python3 -m budget_app list --limit 3
-
-# search(거래 검색)
-python3 -m budget_app search --from 2024-01-01 --to 2026-10-07 --category food --type expense --q 커피
-
-# summary(월별 요약)
-python3 -m budget_app summary --month 2026-10 --top 3
-
-#
-```
