@@ -152,7 +152,7 @@ def _print_transactions(transactions: Iterable[Transaction]) -> None:
         print("데이터 없음")
 
 
-# 해석된 명령어에 따라 기능 수행
+# 해석된 명령어에 따라 가계부 기능 수행
 @handle_cli_errors
 def run_cli(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv) # 입력한 명령어와 옵션값을 분석 후 args 변수에 저장

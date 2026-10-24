@@ -56,25 +56,27 @@ class TransactionRepository:
         with self.path.open("a", encoding="utf-8", newline="\n") as destination:
             _write_record(destination, transaction.to_record())
 
+    # 원본 파일을 첫 줄부터 읽고, 각 거래를 임시 파일에 작성. 수정 대상이면 바뀐 내용을 쓰고, 삭제 대상이면 그 줄을 건너뛴다
+    # 끝까지 읽고 해당 ID가 있는지 확인한 뒤, 임시 파일의 내용을 원본 파일에 다시 작성
     def rewrite_one(
         self, identifier: str, transform: Callable[[Transaction], Transaction | None]
     ) -> None:
-        found = False
+        found = False # 원하는 ID를 찾지 못함
         # 작업 스트림은 검증 중 원본을 건드리지 않기 위한 것이며 원자적 교체나 백업이 아니다.
-        with tempfile.TemporaryFile(mode="w+t", encoding="utf-8", newline="\n") as staged:
-            for _, transaction in self.iter_transactions():
-                if transaction.id == identifier:
-                    if found:
+        with tempfile.TemporaryFile(mode="w+t", encoding="utf-8", newline="\n") as staged: # TempororyFile(): 임시 파일 생성
+            for _, transaction in self.iter_transactions(): # 거래를 하나씩 확인하고 수정 또는 삭제
+                if transaction.id == identifier: # 현재 거래의 ID와 찾으려는 ID를 비교
+                    if found: # 같은 ID를 가진 거래가 두 개 이상 발견되었는지 검사
                         raise AppError("중복된 거래 ID가 저장되어 있습니다.", "거래 파일의 ID를 확인하세요.")
-                    found = True
+                    found = True # ID가 서로 일치할경우
                     transaction = transform(transaction)
-                if transaction is not None:
-                    _write_record(staged, transaction.to_record())
+                if transaction is not None: # transaction이 Transaction 객체라면 임시 파일에 저장
+                    _write_record(staged, transaction.to_record()) # None이 반환되어 기록되지 않고 나머지 거래만 남아.
             if not found:
-                raise AppError("해당 ID의 거래가 없습니다.", "list 또는 search로 ID를 확인하세요.")
-            staged.seek(0)
+                raise AppError("해당 ID의 거래가 없습니다.", "list 또는 search로 ID를 확인하세요.") # ID를 찾지 못한 경우 오류 발생
+            staged.seek(0) # 임시 파일의 읽기 위치를 처음으로 이동. 지금까지 임시 파일에 내용을 작성했으니 다시 처음부터 읽기 위해 필요한 작업
             with self.path.open("w", encoding="utf-8", newline="\n") as destination:
-                shutil.copyfileobj(staged, destination)
+                shutil.copyfileobj(staged, destination) # 임시 파일에 기록한 모든 내용을 기존 거래 파일로 복사
 
 
 class CategoryRepository:
