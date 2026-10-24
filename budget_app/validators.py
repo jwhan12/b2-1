@@ -1,4 +1,5 @@
-"""CLI, CSV, 저장 파일에 공통으로 적용하는 입력 검증."""
+"""계부에서 잘못된 데이터가 처리되지 않도록 검사하는 공통 검증 모듈.
+성공하면 값 반환, 잘못된 값이 들어올 경우 형식에 맞는 Error 발생시켜 문제 해결 방안 제시"""
 
 import re
 from datetime import date
@@ -12,6 +13,7 @@ _AMOUNT_PATTERN = re.compile(r"[0-9]+\Z")
 VALID_TYPES = {"income", "expense"}
 
 
+# 날짜 형식과 실제 존재하는 날짜인지 검증
 def validate_date(value: str) -> str:
     if not isinstance(value, str) or not _DATE_PATTERN.fullmatch(value):
         raise AppError("날짜 형식이 올바르지 않습니다.", "YYYY-MM-DD 형식으로 입력하세요. 예: 2024-01-15")
@@ -22,6 +24,7 @@ def validate_date(value: str) -> str:
     return value
 
 
+# 연도와 월의 형식 및 유효성 검증
 def validate_month(value: str) -> str:
     if not isinstance(value, str) or not _MONTH_PATTERN.fullmatch(value):
         raise AppError("월 형식이 올바르지 않습니다.", "YYYY-MM 형식으로 입력하세요. 예: 2024-01")
@@ -32,6 +35,7 @@ def validate_month(value: str) -> str:
     return value
 
 
+# 금액이 0보다 큰 정수인지 검증
 def validate_amount(value: str | int) -> int:
     if type(value) is int:
         amount = value
@@ -44,12 +48,14 @@ def validate_amount(value: str | int) -> int:
     return amount
 
 
+# 거래 유형이 income 또는 expense인지 검증
 def validate_type(value: str) -> str:
     if value not in VALID_TYPES:
         raise AppError("허용되지 않은 거래 타입입니다.", "income 또는 expense를 입력하세요.")
     return value
 
 
+# 카테고리 이름이 유효한지 검증
 def validate_category_name(value: str) -> str:
     if not isinstance(value, str):
         raise AppError("카테고리 이름이 올바르지 않습니다.", "비어 있지 않은 이름을 입력하세요.")
@@ -61,6 +67,7 @@ def validate_category_name(value: str) -> str:
     return name
 
 
+# 쉼표로 구분된 태그를 리스트로 변환
 def parse_tags(value: str) -> list[str]:
     if not isinstance(value, str):
         raise AppError("태그 형식이 올바르지 않습니다.", "태그를 쉼표로 구분해 입력하세요.")

@@ -1,4 +1,4 @@
-"""가계부 규칙과 CSV 입출력."""
+"""사용자가 요청한 가계부 작업을 실제로 처리하고, 그 과정에서 필요한 규칙을 검사."""
 
 import csv
 import heapq
@@ -30,9 +30,11 @@ class BudgetService:
     def __init__(self, storage: Storage) -> None:
         self.storage = storage
 
+    # 등록된 카테고리 목록 조회
     def category_names(self) -> list[str]:
         return self.storage.categories.list_names()
 
+    # 등록된 카테고리인지 검증
     def require_category(self, value: str) -> str:
         name = validate_category_name(value)
         if name not in self.category_names():
@@ -42,6 +44,7 @@ class BudgetService:
             )
         return name
 
+    # 새로운 카테고리 추가
     def add_category(self, value: str) -> str:
         name = validate_category_name(value)
         names = self.category_names()
@@ -51,6 +54,7 @@ class BudgetService:
         self.storage.categories.save_names(names)
         return name
 
+    # 기존 카테고리 삭제
     def remove_category(self, value: str) -> str:
         name = validate_category_name(value)
         names = self.category_names()
@@ -66,6 +70,7 @@ class BudgetService:
         self.storage.categories.save_names([item for item in names if item != name])
         return name
 
+    # 입력값 검증 후 거래객체 생성
     def _new_transaction(
         self,
         transaction_date: str,
@@ -98,6 +103,7 @@ class BudgetService:
             tags=parse_tags(tags),
         )
 
+    # 새로운 거래 추가
     def add_transaction(
         self,
         transaction_date: str,
@@ -124,6 +130,7 @@ class BudgetService:
         )
         return [transaction for _, transaction in selected]
 
+    # 특정 거래 정보 수정
     def update_transaction(self, identifier: str, **changes: str | None) -> None:
         provided = {key: value for key, value in changes.items() if value is not None}
         if not provided:
@@ -147,10 +154,11 @@ class BudgetService:
 
         self.storage.transactions.rewrite_one(identifier, apply)
 
+    # 특정 거래 삭제
     def delete_transaction(self, identifier: str) -> None:
         self.storage.transactions.rewrite_one(identifier, lambda _: None)
 
-    # 제너레이터 함수
+    # 조건에 맞는 거래 검색
     def search_transactions(
         self,
         *,
@@ -204,6 +212,7 @@ class BudgetService:
             last_index, last_transaction = batch[-1]
             cursor = (last_transaction.date, last_index)
 
+    # 월별 수입·지출·거래 건수·카테고리별 지출 요약
     def month_summary(self, month: str, top: int = 3) -> MonthSummary:
         month = validate_month(month)
         if top <= 0:
@@ -229,7 +238,7 @@ class BudgetService:
             category_expenses=ranked,
             budget=self.storage.budgets.list_budgets().get(month),
         )
-
+    # 특정 월의 예산 설정
     def set_budget(self, month: str, amount: str | int) -> int:
         month = validate_month(month)
         amount = validate_amount(amount)
@@ -237,11 +246,12 @@ class BudgetService:
         budgets[month] = amount
         self.storage.budgets.save_budgets(budgets)
         return amount
-
+    # 특정 월의 예산 조회
     def get_budget(self, month: str) -> int | None:
         month = validate_month(month)
         return self.storage.budgets.list_budgets().get(month)
 
+    # CSV 파일의 거래 데이터를 가계부에 추가
     def import_csv(
         self,
         source_path: Path,
@@ -307,6 +317,7 @@ class BudgetService:
             ) from exc
         return ImportResult(imported=imported, skipped=skipped)
 
+    # 가계부 데이터를 CSV 파일로 저장
     def export_csv(
         self,
         output_path: Path,
@@ -352,6 +363,7 @@ class BudgetService:
                 count += 1
         return count
 
+    # CSV 가져오기·내보내기 과정에서 기존 JSONL 저장 파일을 잘못 사용하는 문제 방지
     def _data_file_paths(self) -> set[Path]:
         return {
             self.storage.transactions.path.resolve(),

@@ -1,4 +1,5 @@
-"""JSONL 저장소. 거래는 한 행씩 읽으며 수정·삭제는 전체 재작성한다."""
+""" 가계부 데이터 구조를 정의한 models.py 데이터를 실제 파일에 저장하고 불러온다.
+Transaction 객체를 저장 형식으로 변환해 파일에 기록한다."""
 
 import json
 import shutil
