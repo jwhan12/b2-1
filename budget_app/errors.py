@@ -1,4 +1,4 @@
-"""사용자에게 보여 줄 오류와 해결 방법."""
+"""사용자에게 보여 줄 오류와 해결 방법 정의."""
 
 from dataclasses import dataclass
 

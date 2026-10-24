@@ -1,4 +1,4 @@
-"""`python -m budget_app` 실행 지점."""
+"""`python3 -m budget_app` 실행 지점."""
 
 def main() -> int: # 정수 반환
     from .cli import run_cli
