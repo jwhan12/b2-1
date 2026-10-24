@@ -23,6 +23,32 @@ python3 -m budget_app add --help
 | `data/categories.jsonl` | 카테고리 |
 | `data/budgets.jsonl` | 월별 예산 |
 
+
+## 파일 구조
+
+```text
+.
+├── README.md                  # 실행 방법, 저장 형식, 명령 사용법
+├── .gitignore                 # Git에서 제외할 파일 설정
+├── budget_app/                # 용돈 기입장 애플리케이션
+│   ├── __init__.py            # Python 패키지 선언
+│   ├── __main__.py            # `python3 -m budget_app` 실행 진입점
+│   ├── cli.py                 # 명령 인자 처리와 사용자 입출력
+│   ├── decorators.py          # CLI 오류 처리 데코레이터
+│   ├── errors.py              # 애플리케이션 오류 정의
+│   ├── models.py              # 거래 및 요약 데이터 모델
+│   ├── repositories.py        # JSONL 파일 읽기·쓰기와 저장소 관리
+│   ├── services.py            # 거래, 카테고리, 예산 관련 비즈니스 로직
+│   └── validators.py          # 날짜, 금액, 카테고리 등 입력값 검증
+├── data/                      # 기본 데이터 저장 디렉터리
+│   ├── transactions.jsonl     # 거래 내역
+│   ├── categories.jsonl       # 카테고리 목록
+│   └── budgets.jsonl          # 월별 예산
+└── examples/
+    └── sample_import.csv      # CSV 가져오기용 예시 파일
+```
+
+
 ## 주요 명령 예시
 
 ```bash
