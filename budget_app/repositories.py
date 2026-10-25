@@ -16,6 +16,7 @@ from .validators import validate_amount, validate_category_name, validate_month
 DEFAULT_CATEGORIES = ("food", "transport", "rent", "salary", "etc")
 
 
+# JSONL 파일을 한 줄씩 읽고 JSON 데이터를 검사
 def _iter_jsonl(path: Path) -> Iterator[tuple[int, dict[str, Any]]]:
     with path.open("r", encoding="utf-8") as source:
         for line_number, line in enumerate(source, 1):
@@ -34,14 +35,17 @@ def _iter_jsonl(path: Path) -> Iterator[tuple[int, dict[str, Any]]]:
             yield line_number, value
 
 
+# 데이터 쓰기_파이썬 딕셔너리를 JSONL 형식으로 기록
 def _write_record(destination: TextIO, record: dict[str, Any]) -> None:
     destination.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
 
 
+# 거래 내역 관리(추가, 조회, 수정, 삭제)
 class TransactionRepository:
     def __init__(self, path: Path) -> None:
         self.path = path
 
+    # 데이터 읽기_JSONL 파일을 한 줄씩 읽어 파이썬 딕셔너리로 변환하는 함수
     def iter_transactions(self) -> Iterator[tuple[int, Transaction]]:
         for line_number, record in _iter_jsonl(self.path):
             try:
@@ -79,6 +83,7 @@ class TransactionRepository:
                 shutil.copyfileobj(staged, destination) # 임시 파일에 기록한 모든 내용을 기존 거래 파일로 복사
 
 
+# 카테고리 목록 조회 및 저장
 class CategoryRepository:
     def __init__(self, path: Path) -> None:
         self.path = path
@@ -108,6 +113,7 @@ class CategoryRepository:
                 _write_record(destination, {"name": name})
 
 
+# 예산 관리(월별 예산 조회 및 저장)
 class BudgetRepository:
     def __init__(self, path: Path) -> None:
         self.path = path
@@ -139,6 +145,7 @@ class BudgetRepository:
                 _write_record(destination, {"month": month, "amount": budgets[month]})
 
 
+# 저장소 초기화 및 통합 관리(데이터 폴더와 파일을 준비하고 Repository 객체를 생성)
 class Storage:
     def __init__(self, data_dir: Path) -> None:
         data_dir.mkdir(parents=True, exist_ok=True)
